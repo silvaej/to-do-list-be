@@ -7,7 +7,7 @@ export class RetrieveTaskUseCase implements RetrievedTaskUseCaseIf {
 
     async execute(id: string): Promise<Task> {
         const result = await this.repository.retrieveTask(id)
-        if (!result.acknowledged) throw new Error(result.error!)
-        return result.data!
+        if (!result.acknowledged || !(result.data instanceof Array)) throw new Error(result.error!)
+        return result.data[0]
     }
 }

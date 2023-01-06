@@ -1,17 +1,15 @@
 import { DeleteResult, InsertResult, MockDbWrapper, UpdateResult } from '@src/interfaces/database/mockdb-wrapper'
 import { Task } from '@src/models/Task'
-import { Logger } from '@src/utils/logger'
 import fs from 'fs'
 
-Logger.setLogger()
-
 interface DB {
+    database: any
     collection: (name: string) => Array<Task>
 }
 
 class Db implements DB {
-    private database: any
-    constructor(data: Buffer) {
+    public database: any
+    constructor(data: any) {
         this.database = JSON.parse(data.toString())
     }
 
@@ -33,8 +31,9 @@ export class MockDb implements MockDbWrapper {
 
     async insert(doc: Task): Promise<InsertResult> {
         const updated = [...this.db.collection(this.collection), doc]
+        const updateDatabase = { ...this.db.database, [this.collection]: updated }
         return new Promise((resolve, reject) => {
-            fs.writeFile('../mock/db.json', JSON.stringify(updated), err => {
+            fs.writeFile('./__mock__/db.json', JSON.stringify(updateDatabase), err => {
                 if (err) reject({ acknowledged: false })
                 resolve({ acknowledged: true })
             })
@@ -43,9 +42,10 @@ export class MockDb implements MockDbWrapper {
 
     async delete(id: string): Promise<DeleteResult> {
         const updated = this.db.collection(this.collection).filter(item => item._id !== id)
+        const updateDatabase = { ...this.db.database, [this.collection]: updated }
 
         return new Promise((resolve, reject) => {
-            fs.writeFile('../mock/db.json', JSON.stringify(updated), err => {
+            fs.writeFile('./__mock__/db.json', JSON.stringify(updateDatabase), err => {
                 if (err || !updated.length) reject({ acknowledged: false, deletedCount: 0 })
                 resolve({ acknowledged: true, deletedCount: updated.length })
             })
@@ -53,10 +53,15 @@ export class MockDb implements MockDbWrapper {
     }
 
     async update(id: string, data: Task): Promise<UpdateResult> {
-        const updated = this.db.collection(this.collection).map(item => (item._id === id ? { ...item, ...data } : item))
+        const cleanData = Object.fromEntries(Object.entries(data).filter(([_, v]) => !!v))
+        console.log(cleanData)
+        const updated = this.db
+            .collection(this.collection)
+            .map(item => (item._id === id ? { ...item, ...cleanData } : item))
+        const updateDatabase = { ...this.db.database, [this.collection]: updated }
 
         return new Promise((resolve, reject) => {
-            fs.writeFile('../mock/db.json', JSON.stringify(updated), err => {
+            fs.writeFile('./__mock__/db.json', JSON.stringify(updateDatabase), err => {
                 if (err || !updated.length) reject({ acknowledged: false, matchedCount: 0 })
                 resolve({ acknowledged: true, matchedCount: updated.length })
             })
@@ -66,9 +71,8 @@ export class MockDb implements MockDbWrapper {
 
 export async function getDbConnection(): Promise<DB> {
     return new Promise((resolve, reject) => {
-        fs.readFile('../mock/db.json', (err, data) => {
+        fs.readFile('./__mock__/db.json', (err, data) => {
             if (err) reject(err)
-            Logger.log('info', 'Connected to the database')
             resolve(new Db(data))
         })
     })

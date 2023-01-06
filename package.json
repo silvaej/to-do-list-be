@@ -7,7 +7,7 @@
         "dev": "nodemon -L",
         "serve": "node -r ts-node/register/transpile-only -r tsconfig-paths/register ./dist/src/index.js",
         "build": "tsc",
-        "test": "jest --detectOpenHandles --watchAll ",
+        "test": "jest --detectOpenHandles --watchAll --testPathIgnorePatterns='./__mock__'",
         "test:watch": "nodemon --exec 'jest --watchAll'",
         "start": "npm run build && npm run serve",
         "debug": "nodemon -e ts -w src -x \"node --inspect -r ts-node/register src/index.ts\""

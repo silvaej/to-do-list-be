@@ -1,8 +1,10 @@
 import request from 'supertest'
-import server from '../index'
+
+import { getServer } from '../index'
 
 describe('POST /tasks', () => {
     it('should return status 201', async () => {
+        const server = await getServer()
         const payload = {
             _id: 'test-001',
             name: 'TEST_0001',
@@ -16,6 +18,7 @@ describe('POST /tasks', () => {
 
 describe('GET /tasks', () => {
     it('should return status 200 and expect an array of TASKS', async () => {
+        const server = await getServer()
         const res = await request(server).get('/tasks')
         expect(res.statusCode).toEqual(200)
         expect(res.body).toBeInstanceOf(Array)
@@ -24,9 +27,10 @@ describe('GET /tasks', () => {
 
 describe('GET /tasks/:id', () => {
     it('should return status 200 and receive an instance of task', async () => {
+        const server = await getServer()
         const res = await request(server).get('/tasks/test-001')
         expect(res.statusCode).toEqual(200)
-        expect(res.body).toHaveProperty('id', 'test-001')
+        expect(res.body).toHaveProperty('_id', 'test-001')
         expect(res.body).toHaveProperty('name')
         expect(res.body).toHaveProperty('description')
         expect(res.body).toHaveProperty('status')
@@ -35,6 +39,7 @@ describe('GET /tasks/:id', () => {
 
 describe('PUT /tasks/:id', () => {
     it('should return status 204', async () => {
+        const server = await getServer()
         const payload = {
             name: 'TEST_0001-EDITED',
             description: 'Some description :)))',
@@ -47,6 +52,7 @@ describe('PUT /tasks/:id', () => {
 
 describe('DELETE /tasks/:id', () => {
     it('should return status 204', async () => {
+        const server = await getServer()
         const res = await request(server).delete('/tasks/test-001')
         expect(res.statusCode).toEqual(204)
     })

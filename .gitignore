@@ -3,6 +3,8 @@ dist
 coverage
 .env
 logs
+__mock__
+__mock__/*
 
 ### VisualStudioCode ###
 .vscode/*      # Maybe .vscode/**/* instead - see comments

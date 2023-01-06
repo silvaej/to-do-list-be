@@ -8,16 +8,10 @@ export class MockDbDataSource implements DataSource {
 
     async find<T extends Task | Array<Task>>(id?: string): Promise<DefaultResponse<T>> {
         const result = await this.db.find(id)
-        if (result.length)
-            return {
-                acknowledged: true,
-                data: result as T,
-                error: null,
-            }
         return {
-            acknowledged: false,
-            data: null,
-            error: 'NotFound',
+            acknowledged: true,
+            data: result as T,
+            error: null,
         }
     }
 
