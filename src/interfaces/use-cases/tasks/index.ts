@@ -1,0 +1,5 @@
+export { AddTaskUseCaseIf } from './add-task'
+export { DeleteTaskUseCaseIf } from './delete-task'
+export { RetrievedTaskUseCaseIf } from './retrieve-task'
+export { RetrievedTasksUseCaseIf } from './retrieve-tasks'
+export { UpdateTaskUseCaseIf } from './update-task'
