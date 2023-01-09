@@ -6,7 +6,7 @@ describe('POST /tasks', () => {
     it('should return status 201', async () => {
         const server = await getServer()
         const payload = {
-            _id: 'test-001',
+            test_id: 'test-001',
             name: 'TEST_0001',
             description: 'Some description :)))',
             status: 'TO_DO',
@@ -30,7 +30,7 @@ describe('GET /tasks/:id', () => {
         const server = await getServer()
         const res = await request(server).get('/tasks/test-001')
         expect(res.statusCode).toEqual(200)
-        expect(res.body).toHaveProperty('_id', 'test-001')
+        expect(res.body).toHaveProperty('test_id', 'test-001')
         expect(res.body).toHaveProperty('name')
         expect(res.body).toHaveProperty('description')
         expect(res.body).toHaveProperty('status')

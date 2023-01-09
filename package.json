@@ -7,8 +7,8 @@
         "dev": "nodemon -L",
         "serve": "node -r ts-node/register/transpile-only -r tsconfig-paths/register ./dist/src/index.js",
         "build": "tsc",
-        "test": "jest --detectOpenHandles --watchAll --testPathIgnorePatterns='./__mock__'",
-        "test:watch": "nodemon --exec 'jest --watchAll'",
+        "test": "jest",
+        "test:watch": "jest --detectOpenHandles --watchAll --runInBand",
         "start": "npm run build && npm run serve",
         "debug": "nodemon -e ts -w src -x \"node --inspect -r ts-node/register src/index.ts\""
     },
@@ -42,6 +42,7 @@
         "@types/cors": "^2.8.13",
         "bcrypt": "^5.1.0",
         "cors": "^2.8.5",
+        "dotenv": "^16.0.3",
         "express": "^4.18.2",
         "mongodb": "^4.10.0",
         "morgan": "^1.10.0",

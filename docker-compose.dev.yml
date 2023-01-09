@@ -14,4 +14,6 @@ services:
             - ./node_modules:/usr/src/app/node_modules
         environment:
             - NODE_ENV=development
+            - MONGODB_USERNAME=todo_admin
+            - MONGODB_SECRET=AbUxeEAO1klTBuFV
         command: ['npm', 'run', 'dev']

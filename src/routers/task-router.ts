@@ -37,8 +37,8 @@ export function createTaskRouter(
 
     router.post('/', async (req: Request, res: Response) => {
         try {
-            const { _id, name, description, status } = req.body
-            await add.execute({ _id, name, description, status })
+            const { test_id, name, description, status } = req.body
+            await add.execute({ test_id, name, description, status })
             res.status(201).end()
         } catch (err) {
             if (err instanceof Error) res.status(500).json({ error: err.message })
@@ -48,8 +48,8 @@ export function createTaskRouter(
     router.put('/:id', async (req: Request, res: Response) => {
         try {
             const { id } = req.params
-            const { _id, name, description, status } = req.body
-            await update.execute(id, { _id, name, description, status })
+            const { test_id, name, description, status } = req.body
+            await update.execute(id, { test_id, name, description, status })
             res.status(204).end()
         } catch (err) {
             if (err instanceof Error) res.status(500).json({ error: err.message })
