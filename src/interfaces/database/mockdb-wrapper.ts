@@ -13,7 +13,7 @@ export interface UpdateResult extends InsertResult {
 }
 
 export interface MockDbWrapper {
-    find(id?: string): Promise<Array<Task>>
+    find(id?: string): Promise<Array<any>>
     insert(doc: Task): Promise<InsertResult>
     delete(id: string): Promise<DeleteResult>
     update(id: string, data: Task): Promise<UpdateResult>

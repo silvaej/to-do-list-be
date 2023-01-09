@@ -1,6 +1,5 @@
 import express from 'express'
 import cors from 'cors'
-import { getDbConnection, MockDb } from './data/connections/mock-connection'
 import { MockDbDataSource } from './data/sources/mockdb-data-source'
 import { TaskRepository } from './repositories/task-repository'
 import { createTaskRouter } from './routers/task-router'
@@ -13,6 +12,8 @@ import {
 } from './use-cases/tasks'
 import { Logger } from './utils/logger'
 import server from './server'
+import { MongoDbDataSource } from './data/sources/mongodb-data-source'
+import { MongoDB, getDbConnection } from './data/connections/mongodb-connection'
 
 const NODE_ENV = process.env.NODE_ENV || 'test'
 
@@ -28,7 +29,7 @@ export async function getServer() {
     }
 
     if (db) {
-        const tasksSource = new MockDbDataSource(new MockDb(db, 'TASKS'))
+        const tasksSource = new MongoDbDataSource(new MongoDB(db, 'TASKS'))
         const tasksRepo = new TaskRepository(tasksSource)
         const tasksRoute = createTaskRouter(
             new AddTaskUseCase(tasksRepo),
