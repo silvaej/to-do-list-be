@@ -1,6 +1,3 @@
-import express from 'express'
-import cors from 'cors'
-import { MockDbDataSource } from './data/sources/mockdb-data-source'
 import { TaskRepository } from './repositories/task-repository'
 import { createTaskRouter } from './routers/task-router'
 import {

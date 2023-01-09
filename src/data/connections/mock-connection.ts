@@ -54,7 +54,6 @@ export class MockDb implements MockDbWrapper {
 
     async update(id: string, data: Task): Promise<UpdateResult> {
         const cleanData = Object.fromEntries(Object.entries(data).filter(([_, v]) => !!v))
-        console.log(cleanData)
         const updated = this.db
             .collection(this.collection)
             .map(item => (item._id === id ? { ...item, ...cleanData } : item))
