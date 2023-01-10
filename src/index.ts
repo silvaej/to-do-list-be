@@ -11,6 +11,15 @@ import { Logger } from './utils/logger'
 import server from './server'
 import { MongoDbDataSource } from './data/sources/mongodb-data-source'
 import { MongoDB, getDbConnection } from './data/connections/mongodb-connection'
+import { ProjectRepository } from './repositories/project-repository'
+import { createProjectRouter } from './routers/project-router'
+import {
+    AddProjectUseCase,
+    DeleteProjectUseCase,
+    RetrieveProjectsUseCase,
+    RetrieveProjectUseCase,
+    UpdateProjectUseCase,
+} from './use-cases/projects'
 
 const NODE_ENV = process.env.NODE_ENV || 'test'
 
@@ -36,6 +45,17 @@ export async function getServer() {
             new UpdateTaskUseCase(tasksRepo)
         )
         server.use('/tasks', tasksRoute)
+
+        const projectSource = new MongoDbDataSource(new MongoDB(db, 'PROJECTS'))
+        const projectRepo = new ProjectRepository(projectSource)
+        const projectRoute = createProjectRouter(
+            new AddProjectUseCase(projectRepo),
+            new RetrieveProjectUseCase(projectRepo),
+            new RetrieveProjectsUseCase(projectRepo),
+            new DeleteProjectUseCase(projectRepo),
+            new UpdateProjectUseCase(projectRepo)
+        )
+        server.use('/projects', projectRoute)
     }
 
     /** ESTABLISHING HTTP CONNECTION */

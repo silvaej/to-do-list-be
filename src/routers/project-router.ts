@@ -1,18 +1,18 @@
 import {
-    AddTaskUseCaseIf,
-    DeleteTaskUseCaseIf,
-    RetrievedTasksUseCaseIf,
-    RetrievedTaskUseCaseIf,
-    UpdateTaskUseCaseIf,
-} from '@src/interfaces/use-cases/tasks'
+    AddProjectUseCaseIf,
+    DeleteProjectUseCaseIf,
+    RetrievedProjectUseCaseIf,
+    RetrievedProjectsUseCaseIf,
+    UpdateProjectUseCaseIf,
+} from '@src/interfaces/use-cases/projects'
 import { Request, Response, Router } from 'express'
 
-export function createTaskRouter(
-    add: AddTaskUseCaseIf,
-    retrieve: RetrievedTaskUseCaseIf,
-    retrieveAll: RetrievedTasksUseCaseIf,
-    remove: DeleteTaskUseCaseIf,
-    update: UpdateTaskUseCaseIf
+export function createProjectRouter(
+    add: AddProjectUseCaseIf,
+    retrieve: RetrievedProjectUseCaseIf,
+    retrieveAll: RetrievedProjectsUseCaseIf,
+    remove: DeleteProjectUseCaseIf,
+    update: UpdateProjectUseCaseIf
 ): Router {
     const router = Router()
 
@@ -37,8 +37,8 @@ export function createTaskRouter(
 
     router.post('/', async (req: Request, res: Response) => {
         try {
-            const { test_id, name, description, status } = req.body
-            const result = await add.execute({ test_id, name, description, status })
+            const { test_id, title, description } = req.body
+            const result = await add.execute({ test_id, title, description })
             if (result) {
                 res.status(201).json({ id: result })
             }
@@ -50,8 +50,8 @@ export function createTaskRouter(
     router.put('/:id', async (req: Request, res: Response) => {
         try {
             const { id } = req.params
-            const { test_id, name, description, status } = req.body
-            await update.execute(id, { test_id, name, description, status })
+            const { test_id, title, description, tasks } = req.body
+            await update.execute(id, { test_id, title, description, tasks })
             res.status(204).end()
         } catch (err) {
             if (err instanceof Error) res.status(500).json({ error: err.message })
