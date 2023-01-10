@@ -18,8 +18,8 @@ export class ProjectRepository implements ProjectRepositoryIf {
         return this.source.find()
     }
 
-    async updateProject(id: string, update: Project): Promise<DefaultResponse<Project>> {
-        return this.source.findOneByIdAndUpdate(id, update)
+    async updateProject(id: string, update: Project, type: 'push' | 'update'): Promise<DefaultResponse<Project>> {
+        return this.source.findOneByIdAndUpdate(id, update, type)
     }
 
     async deleteProject(id: string): Promise<DefaultResponse<Project>> {

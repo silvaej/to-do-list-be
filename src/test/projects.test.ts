@@ -11,7 +11,7 @@ beforeAll(async () => {
 describe('POST /projects', () => {
     it('should return status 201 and an id', async () => {
         const payload = {
-            test_id: 'test_001',
+            test_id: 'test-001',
             title: 'PROJECT_TEST_001',
             description: 'Some description :)))',
         }
@@ -34,19 +34,27 @@ describe('GET /projects/:id', () => {
         const res = await request(server).get('/projects/test-001')
         expect(res.statusCode).toEqual(200)
         expect(res.body).toHaveProperty('test_id', 'test-001')
-        expect(res.body).toHaveProperty('name')
+        expect(res.body).toHaveProperty('title')
         expect(res.body).toHaveProperty('description')
         expect(res.body).toHaveProperty('tasks', [])
         expect(res.body).toHaveProperty('dateCreated')
     })
 })
 
-describe('PUT /projects/:id', () => {
+describe('PUT /projects/:type/:id', () => {
     it('should return status 204', async () => {
         const payload = {
             title: 'PROJECT_TEST_001_EDITED',
         }
-        const res = await request(server).put('/projects/test-001').send(payload)
+        const res = await request(server).put('/projects/update/test-001').send(payload)
+        expect(res.statusCode).toEqual(204)
+    })
+
+    it('should return status 204', async () => {
+        const payload = {
+            tasks: '1239012834081',
+        }
+        const res = await request(server).put('/projects/push/test-001').send(payload)
         expect(res.statusCode).toEqual(204)
     })
 })

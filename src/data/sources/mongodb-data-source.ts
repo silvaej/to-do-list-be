@@ -23,10 +23,18 @@ export class MongoDbDataSource implements DataSource {
         }
     }
 
-    async findOneByIdAndUpdate<T extends Task | Project>(id: string, update: T): Promise<DefaultResponse<T>> {
+    async findOneByIdAndUpdate<T extends Task | Project>(
+        id: string,
+        update: T,
+        type?: 'push' | 'update'
+    ): Promise<DefaultResponse<T>> {
         let document = update
         document = Object.fromEntries(Object.entries(document).filter(([_, v]) => !!v)) as T
-        const { acknowledged, matchedCount } = await this.db.update(id, { $set: document })
+        let query = {}
+        if (type && type === 'push') query = { $push: document }
+        else query = { $set: document }
+
+        const { acknowledged, matchedCount } = await this.db.update(id, query)
         let response: DefaultResponse<T> = {
             acknowledged: false,
             data: null,

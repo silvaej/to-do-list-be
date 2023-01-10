@@ -5,6 +5,6 @@ export interface ProjectRepositoryIf {
     addProject(project: Project): Promise<IdResponse>
     retrieveProject(id: string): Promise<DefaultResponse<Project>>
     retrieveProjects(): Promise<DefaultResponse<Array<Project>>>
-    updateProject(id: string, update: Project): Promise<DefaultResponse<Project>>
+    updateProject(id: string, update: Project, type: 'push' | 'update'): Promise<DefaultResponse<Project>>
     deleteProject(id: string): Promise<DefaultResponse<Project>>
 }

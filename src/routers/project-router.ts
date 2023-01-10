@@ -6,6 +6,7 @@ import {
     UpdateProjectUseCaseIf,
 } from '@src/interfaces/use-cases/projects'
 import { Request, Response, Router } from 'express'
+import { type } from 'os'
 
 export function createProjectRouter(
     add: AddProjectUseCaseIf,
@@ -47,12 +48,15 @@ export function createProjectRouter(
         }
     })
 
-    router.put('/:id', async (req: Request, res: Response) => {
+    router.put('/:type/:id', async (req: Request, res: Response) => {
         try {
-            const { id } = req.params
+            // type can be 'push' or 'update'
+            const { type, id } = req.params
             const { test_id, title, description, tasks } = req.body
-            await update.execute(id, { test_id, title, description, tasks })
-            res.status(204).end()
+            if (type === 'push' || type === 'update') {
+                await update.execute(id, { test_id, title, description, tasks }, type)
+                res.status(204).end()
+            }
         } catch (err) {
             if (err instanceof Error) res.status(500).json({ error: err.message })
         }
