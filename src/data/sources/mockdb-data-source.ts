@@ -1,5 +1,5 @@
 import { DataSource } from '@src/interfaces/database/data-source'
-import { DefaultResponse } from '@src/interfaces/database/default-response'
+import { DefaultResponse, IdResponse } from '@src/interfaces/database/default-response'
 import { MockDbWrapper } from '@src/interfaces/database/mockdb-wrapper'
 import { Task } from '@src/models/Task'
 
@@ -15,7 +15,7 @@ export class MockDbDataSource implements DataSource {
         }
     }
 
-    async insertOne<T extends Task>(doc: T): Promise<DefaultResponse<Task>> {
+    async insertOne<T extends Task>(doc: T): Promise<IdResponse> {
         const { acknowledged } = await this.db.insert(doc)
         return {
             acknowledged,
