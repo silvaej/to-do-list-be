@@ -1,17 +1,20 @@
 import { DataSource } from '@src/interfaces/database/data-source'
 import { DefaultResponse, IdResponse } from '@src/interfaces/database/default-response'
 import { MongoDbWrapper } from '@src/interfaces/database/mongodb-wrapper'
+import { Project } from '@src/models/Project'
 import { Task } from '@src/models/Task'
 
 export class MongoDbDataSource implements DataSource {
     constructor(private db: MongoDbWrapper) {}
 
-    async find<T extends Task | Task[]>(id?: string | undefined): Promise<DefaultResponse<T>> {
+    async find<T extends Task | Array<Task> | Project | Array<Project>>(
+        id?: string | undefined
+    ): Promise<DefaultResponse<T>> {
         const result = await this.db.find(id)
         return { acknowledged: true, data: result as T, error: null }
     }
 
-    async insertOne<T extends Task>(doc: T): Promise<IdResponse> {
+    async insertOne<T extends Task | Project>(doc: T): Promise<IdResponse> {
         const { acknowledged, insertedId } = await this.db.insert(doc)
         return {
             acknowledged,
@@ -20,10 +23,18 @@ export class MongoDbDataSource implements DataSource {
         }
     }
 
-    async findOneByIdAndUpdate<T extends Task>(id: string, update: T): Promise<DefaultResponse<T>> {
+    async findOneByIdAndUpdate<T extends Task | Project>(
+        id: string,
+        update: T,
+        type?: 'push' | 'update'
+    ): Promise<DefaultResponse<T>> {
         let document = update
         document = Object.fromEntries(Object.entries(document).filter(([_, v]) => !!v)) as T
-        const { acknowledged, matchedCount } = await this.db.update(id, { $set: document })
+        let query = {}
+        if (type && type === 'push') query = { $push: document }
+        else query = { $set: document }
+
+        const { acknowledged, matchedCount } = await this.db.update(id, query)
         let response: DefaultResponse<T> = {
             acknowledged: false,
             data: null,
@@ -42,7 +53,7 @@ export class MongoDbDataSource implements DataSource {
         return response
     }
 
-    async findOneByIdAndDelete<T extends Task>(id: string): Promise<DefaultResponse<T>> {
+    async findOneByIdAndDelete<T extends Task | Project>(id: string): Promise<DefaultResponse<T>> {
         const { acknowledged, deletedCount } = await this.db.delete(id)
         return {
             acknowledged: acknowledged && !!deletedCount,
