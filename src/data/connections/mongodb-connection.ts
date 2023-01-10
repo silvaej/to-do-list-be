@@ -37,9 +37,8 @@ export class MongoDB implements MongoDbWrapper {
         let query = {}
         if (process.env.NODE_ENV === 'test') query = { test_id: id }
         else query = { _id: new ObjectId(id) }
-        let document = data
-        document = Object.fromEntries(Object.entries(document).filter(([_, v]) => !!v))
-        const res = await this.db.collection(this.collection).updateOne(query, document)
+
+        const res = await this.db.collection(this.collection).updateOne(query, data)
         return res
     }
 }
