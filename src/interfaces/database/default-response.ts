@@ -5,3 +5,9 @@ export interface DefaultResponse<T extends Task | Array<Task>> {
     data: T | null
     error: string | null
 }
+
+export interface IdResponse {
+    acknowledged: boolean
+    data: string | null
+    error: string | null
+}

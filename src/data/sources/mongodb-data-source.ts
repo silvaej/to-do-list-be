@@ -1,5 +1,5 @@
 import { DataSource } from '@src/interfaces/database/data-source'
-import { DefaultResponse } from '@src/interfaces/database/default-response'
+import { DefaultResponse, IdResponse } from '@src/interfaces/database/default-response'
 import { MongoDbWrapper } from '@src/interfaces/database/mongodb-wrapper'
 import { Task } from '@src/models/Task'
 
@@ -11,17 +11,19 @@ export class MongoDbDataSource implements DataSource {
         return { acknowledged: true, data: result as T, error: null }
     }
 
-    async insertOne<T extends Task>(doc: T): Promise<DefaultResponse<Task>> {
-        const { acknowledged } = await this.db.insert(doc)
+    async insertOne<T extends Task>(doc: T): Promise<IdResponse> {
+        const { acknowledged, insertedId } = await this.db.insert(doc)
         return {
             acknowledged,
-            data: null,
+            data: insertedId.toString(),
             error: acknowledged ? null : 'Something went wrong',
         }
     }
 
     async findOneByIdAndUpdate<T extends Task>(id: string, update: T): Promise<DefaultResponse<T>> {
-        const { acknowledged, matchedCount } = await this.db.update(id, { $set: update })
+        let document = update
+        document = Object.fromEntries(Object.entries(document).filter(([_, v]) => !!v)) as T
+        const { acknowledged, matchedCount } = await this.db.update(id, { $set: document })
         let response: DefaultResponse<T> = {
             acknowledged: false,
             data: null,

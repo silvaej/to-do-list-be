@@ -13,6 +13,7 @@ describe('POST /tasks', () => {
         }
         const res = await request(server).post('/tasks').send(payload)
         expect(res.statusCode).toEqual(201)
+        expect(res.body).toHaveProperty('id')
     })
 })
 

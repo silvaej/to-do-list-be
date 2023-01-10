@@ -38,8 +38,10 @@ export function createTaskRouter(
     router.post('/', async (req: Request, res: Response) => {
         try {
             const { test_id, name, description, status } = req.body
-            await add.execute({ test_id, name, description, status })
-            res.status(201).end()
+            const result = await add.execute({ test_id, name, description, status })
+            if (result) {
+                res.status(201).json({ id: result })
+            }
         } catch (err) {
             if (err instanceof Error) res.status(500).json({ error: err.message })
         }

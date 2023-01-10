@@ -1,12 +1,12 @@
 import { DataSource } from '@src/interfaces/database/data-source'
-import { DefaultResponse } from '@src/interfaces/database/default-response'
+import { DefaultResponse, IdResponse } from '@src/interfaces/database/default-response'
 import { TaskRepositoryIf } from '@src/interfaces/repositories/task-repository'
 import { Task } from '@src/models/Task'
 
 export class TaskRepository implements TaskRepositoryIf {
     constructor(private source: DataSource) {}
 
-    async addTask(task: Task): Promise<DefaultResponse<Task>> {
+    async addTask(task: Task): Promise<IdResponse> {
         return this.source.insertOne(task)
     }
 

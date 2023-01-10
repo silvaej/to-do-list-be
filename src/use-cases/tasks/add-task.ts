@@ -5,8 +5,9 @@ import { Task } from '@src/models/Task'
 export class AddTaskUseCase implements AddTaskUseCaseIf {
     constructor(private repository: TaskRepositoryIf) {}
 
-    async execute(task: Task): Promise<void> {
-        const result = await this.repository.addTask(task)
-        if (!result.acknowledged) throw new Error(result.error!)
+    async execute(task: Task): Promise<string | null> {
+        const { acknowledged, data, error } = await this.repository.addTask(task)
+        if (!acknowledged) throw new Error(error!)
+        return data
     }
 }
