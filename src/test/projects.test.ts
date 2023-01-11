@@ -21,7 +21,7 @@ describe('POST /projects', () => {
     })
 })
 
-describe('GET /projecs', () => {
+describe('GET /projects', () => {
     it('should return status 200 and expect an array of Projects', async () => {
         const res = await request(server).get('/projects')
         expect(res.statusCode).toEqual(200)

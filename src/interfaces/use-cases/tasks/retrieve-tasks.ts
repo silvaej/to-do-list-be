@@ -1,5 +1,5 @@
 import { Task } from '@src/models/Task'
 
 export interface RetrievedTasksUseCaseIf {
-    execute(): Promise<Array<Task>>
+    execute(project_id: string): Promise<Array<Task>>
 }

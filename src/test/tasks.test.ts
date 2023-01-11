@@ -12,6 +12,7 @@ describe('POST /tasks', () => {
     it('should return status 201', async () => {
         const payload = {
             test_id: 'test-001',
+            project_id: 'test_project',
             name: 'TEST_0001',
             description: 'Some description :)))',
             status: 'TO_DO',
@@ -24,7 +25,7 @@ describe('POST /tasks', () => {
 
 describe('GET /tasks', () => {
     it('should return status 200 and expect an array of TASKS', async () => {
-        const res = await request(server).get('/tasks')
+        const res = await request(server).get('/tasks').query({ project_id: 'test_project' })
         expect(res.statusCode).toEqual(200)
         expect(res.body).toBeInstanceOf(Array)
     })
