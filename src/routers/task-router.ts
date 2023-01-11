@@ -18,8 +18,11 @@ export function createTaskRouter(
 
     router.get('/', async (req: Request, res: Response) => {
         try {
-            const result = await retrieveAll.execute()
-            res.status(200).json(result)
+            const { project_id } = req.query
+            if (project_id && typeof project_id === 'string') {
+                const result = await retrieveAll.execute(project_id)
+                res.status(200).json(result)
+            }
         } catch (err) {
             if (err instanceof Error) res.status(500).json({ error: err.message })
         }
@@ -37,8 +40,8 @@ export function createTaskRouter(
 
     router.post('/', async (req: Request, res: Response) => {
         try {
-            const { test_id, name, description, status } = req.body
-            const result = await add.execute({ test_id, name, description, status })
+            const { test_id, project_id, name, description, status } = req.body
+            const result = await add.execute({ test_id, project_id, name, description, status })
             if (result) {
                 res.status(201).json({ id: result })
             }
@@ -50,8 +53,8 @@ export function createTaskRouter(
     router.put('/:id', async (req: Request, res: Response) => {
         try {
             const { id } = req.params
-            const { test_id, name, description, status } = req.body
-            await update.execute(id, { test_id, name, description, status })
+            const { test_id, project_id, name, description, status } = req.body
+            await update.execute(id, { test_id, project_id, name, description, status })
             res.status(204).end()
         } catch (err) {
             if (err instanceof Error) res.status(500).json({ error: err.message })

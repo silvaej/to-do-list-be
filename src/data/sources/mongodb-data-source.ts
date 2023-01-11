@@ -8,9 +8,10 @@ export class MongoDbDataSource implements DataSource {
     constructor(private db: MongoDbWrapper) {}
 
     async find<T extends Task | Array<Task> | Project | Array<Project>>(
-        id?: string | undefined
+        id?: string,
+        project_id?: string
     ): Promise<DefaultResponse<T>> {
-        const result = await this.db.find(id)
+        const result = await this.db.find(id, project_id)
         return { acknowledged: true, data: result as T, error: null }
     }
 

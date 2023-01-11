@@ -9,11 +9,15 @@ if (!process.env.NODE_ENV || process.env.NODE_ENV === 'test') {
 export class MongoDB implements MongoDbWrapper {
     constructor(private db: Db, private collection: string) {}
 
-    async find(id?: string): Promise<Array<any>> {
+    async find(id?: string, project_id?: string): Promise<Array<any>> {
         let query = {}
         if (id) {
             if (process.env.NODE_ENV === 'test') query = { test_id: id }
             else query = { _id: new ObjectId(id) }
+        }
+
+        if (project_id) {
+            query = { ...query, project_id }
         }
 
         const results = await this.db.collection(this.collection).find(query).toArray()
