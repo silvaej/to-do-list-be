@@ -39,7 +39,13 @@ export function createProjectRouter(
     router.post('/', async (req: Request, res: Response) => {
         try {
             const { test_id, title, description } = req.body
-            const result = await add.execute({ test_id, title, description })
+            const result = await add.execute({
+                test_id,
+                title,
+                description,
+                total_number_of_tasks: 0,
+                number_of_tasks_done: 0,
+            })
             if (result) {
                 res.status(201).json({ id: result })
             }
@@ -48,15 +54,36 @@ export function createProjectRouter(
         }
     })
 
-    router.put('/:type/:id', async (req: Request, res: Response) => {
+    router.put('/:id', async (req: Request, res: Response) => {
         try {
-            // type can be 'push' or 'update'
-            const { type, id } = req.params
-            const { test_id, title, description, tasks } = req.body
-            if (type === 'push' || type === 'update') {
-                await update.execute(id, { test_id, title, description, tasks }, type)
-                res.status(204).end()
-            }
+            const { id } = req.params
+            const { tasks, ...rest } = req.body
+            const push = tasks ? { tasks } : {}
+            const query = { ...rest }
+            await update.execute(id, query, push)
+            res.status(204).end()
+        } catch (err) {
+            if (err instanceof Error) res.status(500).json({ error: err.message })
+        }
+    })
+
+    router.put('/:id/editTotal/:increase', async (req: Request, res: Response) => {
+        try {
+            const { id, increase } = req.params
+            const query = { total_number_of_tasks: Number(increase) }
+            await update.execute(id, undefined, undefined, query)
+            res.status(204).end()
+        } catch (err) {
+            if (err instanceof Error) res.status(500).json({ error: err.message })
+        }
+    })
+
+    router.put('/:id/editDone/:increase', async (req: Request, res: Response) => {
+        try {
+            const { id, increase } = req.params
+            const query = { number_of_tasks_done: Number(increase) }
+            await update.execute(id, undefined, undefined, query)
+            res.status(204).end()
         } catch (err) {
             if (err instanceof Error) res.status(500).json({ error: err.message })
         }

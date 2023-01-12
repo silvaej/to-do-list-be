@@ -41,12 +41,12 @@ describe('GET /projects/:id', () => {
     })
 })
 
-describe('PUT /projects/:type/:id', () => {
+describe('PUT /projects/:id', () => {
     it('should return status 204', async () => {
         const payload = {
             title: 'PROJECT_TEST_001_EDITED',
         }
-        const res = await request(server).put('/projects/update/test-001').send(payload)
+        const res = await request(server).put('/projects/test-001').send(payload)
         expect(res.statusCode).toEqual(204)
     })
 
@@ -54,7 +54,21 @@ describe('PUT /projects/:type/:id', () => {
         const payload = {
             tasks: '1239012834081',
         }
-        const res = await request(server).put('/projects/push/test-001').send(payload)
+        const res = await request(server).put('/projects/test-001').send(payload)
+        expect(res.statusCode).toEqual(204)
+    })
+})
+
+describe('PUT /projects/:id/editTotal/:increase', () => {
+    it('should return status 204', async () => {
+        const res = await request(server).put('/projects/test-001/editTotal/1')
+        expect(res.statusCode).toEqual(204)
+    })
+})
+
+describe('PUT /projects/:id/editDone/:increase', () => {
+    it('should return status 204', async () => {
+        const res = await request(server).put('/projects/test-001/editDone/1')
         expect(res.statusCode).toEqual(204)
     })
 })

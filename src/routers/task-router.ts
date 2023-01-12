@@ -1,6 +1,7 @@
 import {
     AddTaskUseCaseIf,
     DeleteTaskUseCaseIf,
+    GroupTaskUseCaseIf,
     RetrievedTasksUseCaseIf,
     RetrievedTaskUseCaseIf,
     UpdateTaskUseCaseIf,
@@ -12,7 +13,8 @@ export function createTaskRouter(
     retrieve: RetrievedTaskUseCaseIf,
     retrieveAll: RetrievedTasksUseCaseIf,
     remove: DeleteTaskUseCaseIf,
-    update: UpdateTaskUseCaseIf
+    update: UpdateTaskUseCaseIf,
+    group: GroupTaskUseCaseIf
 ): Router {
     const router = Router()
 
@@ -33,6 +35,15 @@ export function createTaskRouter(
             const { id } = req.params
             const result = await retrieve.execute(id)
             res.status(200).json(result)
+        } catch (err) {
+            if (err instanceof Error) res.status(500).json({ error: err.message })
+        }
+    })
+
+    router.get('/process/group', async (req: Request, res: Response) => {
+        try {
+            const result = await group.execute()
+            res.status(200).json({ data: result })
         } catch (err) {
             if (err instanceof Error) res.status(500).json({ error: err.message })
         }
