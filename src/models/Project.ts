@@ -8,3 +8,9 @@ export interface Project {
     total_number_of_tasks: number
     number_of_tasks_done: number
 }
+
+export interface GroupedTaskSummary {
+    _id: string
+    total: number
+    total_done: number
+}

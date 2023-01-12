@@ -43,6 +43,10 @@ export class MongoDB implements MongoDbWrapper {
         const res = await this.db.collection(this.collection).updateOne(query, update)
         return res
     }
+
+    async aggregate(pipeline: object[]): Promise<any> {
+        return await this.db.collection(this.collection).aggregate(pipeline).toArray()
+    }
 }
 
 export async function getDbConnection(): Promise<Db> {

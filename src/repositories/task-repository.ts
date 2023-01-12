@@ -1,6 +1,7 @@
 import { DataSource } from '@src/interfaces/database/data-source'
 import { DefaultResponse, IdResponse } from '@src/interfaces/database/default-response'
 import { TaskRepositoryIf } from '@src/interfaces/repositories/task-repository'
+import { GroupedTaskSummary } from '@src/models/Project'
 import { Task } from '@src/models/Task'
 
 export class TaskRepository implements TaskRepositoryIf {
@@ -25,5 +26,9 @@ export class TaskRepository implements TaskRepositoryIf {
 
     async deleteTask(id: string): Promise<DefaultResponse<Task>> {
         return this.source.findOneByIdAndDelete(id)
+    }
+
+    async groupTask(): Promise<DefaultResponse<Array<GroupedTaskSummary>>> {
+        return await this.source.groupByProject()
     }
 }

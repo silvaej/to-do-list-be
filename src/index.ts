@@ -3,6 +3,7 @@ import { createTaskRouter } from './routers/task-router'
 import {
     AddTaskUseCase,
     DeleteTaskUseCase,
+    GroupTaskUseCase,
     RetrieveTasksUseCase,
     RetrieveTaskUseCase,
     UpdateTaskUseCase,
@@ -42,7 +43,8 @@ export async function getServer() {
             new RetrieveTaskUseCase(tasksRepo),
             new RetrieveTasksUseCase(tasksRepo),
             new DeleteTaskUseCase(tasksRepo),
-            new UpdateTaskUseCase(tasksRepo)
+            new UpdateTaskUseCase(tasksRepo),
+            new GroupTaskUseCase(tasksRepo)
         )
         server.use('/tasks', tasksRoute)
 

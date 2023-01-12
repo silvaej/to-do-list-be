@@ -1,3 +1,4 @@
+import { GroupedTaskSummary } from '@src/models/Project'
 import { Task } from '@src/models/Task'
 import { DefaultResponse, IdResponse } from '../database/default-response'
 
@@ -7,4 +8,5 @@ export interface TaskRepositoryIf {
     retrieveTasks(project_id: string): Promise<DefaultResponse<Array<Task>>>
     updateTask(id: string, update: object): Promise<DefaultResponse<Task>>
     deleteTask(id: string): Promise<DefaultResponse<Task>>
+    groupTask(): Promise<DefaultResponse<Array<GroupedTaskSummary>>>
 }

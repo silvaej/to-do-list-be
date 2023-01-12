@@ -6,4 +6,5 @@ export interface MongoDbWrapper {
     insert(doc: any): Promise<InsertOneResult<Document>>
     delete(id: string): Promise<DeleteResult>
     update(id: string, update: object): Promise<UpdateResult>
+    aggregate(pipeline: Array<object>): Promise<any>
 }
