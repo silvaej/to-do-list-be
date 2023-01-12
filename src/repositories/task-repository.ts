@@ -18,8 +18,9 @@ export class TaskRepository implements TaskRepositoryIf {
         return this.source.find(undefined, project_id)
     }
 
-    async updateTask(id: string, update: Task): Promise<DefaultResponse<Task>> {
-        return this.source.findOneByIdAndUpdate(id, update)
+    async updateTask(id: string, update: object): Promise<DefaultResponse<Task>> {
+        update = Object.fromEntries(Object.entries(update).filter(([_, v]) => v !== undefined && v !== null))
+        return this.source.findOneByIdAndUpdate(id, { $set: update })
     }
 
     async deleteTask(id: string): Promise<DefaultResponse<Task>> {

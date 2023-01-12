@@ -25,8 +25,7 @@ export class MongoDB implements MongoDbWrapper {
     }
 
     async insert(doc: any): Promise<InsertOneResult<Document>> {
-        let document = doc
-        document = Object.fromEntries(Object.entries(document).filter(([_, v]) => !!v))
+        doc = Object.fromEntries(Object.entries(doc).filter(([_, v]) => v !== undefined && v !== null))
         return await this.db.collection(this.collection).insertOne(doc)
     }
 
@@ -37,12 +36,11 @@ export class MongoDB implements MongoDbWrapper {
         return await this.db.collection(this.collection).deleteOne(query)
     }
 
-    async update(id: string, data: object): Promise<UpdateResult> {
+    async update(id: string, update: object): Promise<UpdateResult> {
         let query = {}
         if (process.env.NODE_ENV === 'test') query = { test_id: id }
         else query = { _id: new ObjectId(id) }
-
-        const res = await this.db.collection(this.collection).updateOne(query, data)
+        const res = await this.db.collection(this.collection).updateOne(query, update)
         return res
     }
 }

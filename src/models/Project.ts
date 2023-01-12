@@ -5,5 +5,6 @@ export interface Project {
     description: string
     tasks?: Array<string> // available only on response
     dateCreated?: Date // automatically generated
-    $push?: Array<string> // used to push items to tasks
+    total_number_of_tasks: number
+    number_of_tasks_done: number
 }
